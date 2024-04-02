@@ -1,14 +1,38 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import { store } from "./redux/store/store";
+import { Provider } from "react-redux";
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  Route,
+  Routes,
+  RouterProvider,
+} from "react-router-dom";
+import CampaignDetails from "./components/CampaignDetails";
+import CampaignForm from "./components/CampaignForm";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <>
+      <Route path="/createcampaign" element={<CampaignForm />}></Route>
+      <Route path="/campaigndetails" element={<CampaignDetails />}></Route>
+    </>
+  )
+);
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
+  <Provider store={store}>
+    <React.StrictMode>
+      <RouterProvider router={router}>
+        <App />
+      </RouterProvider>
+    </React.StrictMode>
+  </Provider>
 );
 
 // If you want to start measuring performance in your app, pass a function
