@@ -5,17 +5,19 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addData, getData } from "../slice/campaign.slice";
+import apiClient from "../apiclient/apiclient";
 
 const schema = yup
   .object({
-    name: yup.string().required("Name is Required"),
-    description: yup.string().required("Description is Required"),
-    amount: yup.string().required("Amount is Required"),
-    expirydate: yup.string().required("Date is Required"),
+    user_id: yup.string().required("User Id is Required"),
+    username: yup.string().required("username is Required"),
+    crypto_wallet_address: yup
+      .string()
+      .required("crypto wallet address is Required"),
   })
   .required();
 
-function CampaignForm() {
+function CampaignOwner() {
   const {
     register,
     handleSubmit,
@@ -25,22 +27,35 @@ function CampaignForm() {
     resolver: yupResolver(schema),
   });
 
-  const dispatch = useDispatch();
+  const [data, setData] = useState();
 
   useEffect(() => {
-    dispatch(getData());
-  }, []);
+    getData();
+  });
 
-  const campaignData = useSelector((state) => state.campaign);
-  console.log("campaignData", campaignData);
-
-  const handleAddData = (data, e) => {
-    dispatch(addData(data));
+  const getData = async () => {
+    try {
+      const response = await apiClient().get("campaignowner/getcampaignowner");
+      console.log(response.data);
+      setData(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const onSubmit = async (data, e) => {
-    e.preventDefault();
+  const handleAddData = async (data, e) => {
+    try {
+      const response = await apiClient().post(
+        "campaignowner/addcampaignowner",
+        data
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  const onSubmit = async (data) => {
     handleAddData(data);
     getData();
     reset();
@@ -48,7 +63,7 @@ function CampaignForm() {
 
   return (
     <div className="App">
-      <h1 className="text-black text-[40px] text-center">Create Campaign</h1>
+      <h1 className="text-black text-[40px] text-center">Campaign Owner</h1>
       <div className="w-full max-w-[30rem] mx-auto">
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -58,14 +73,14 @@ function CampaignForm() {
           <>
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
-                Name
+                User_Id
               </label>
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 id="username"
                 type="text"
-                {...register("name")}
-                placeholder="Enter Your Campaign Name"
+                {...register("user_id")}
+                placeholder="Enter Your User Id"
               />
 
               <p className="text-[red]">{errors.name?.message}</p>
@@ -75,48 +90,31 @@ function CampaignForm() {
                 className="block text-gray-700 text-sm font-bold mb-2"
                 htmlFor="password"
               >
-                Description
+                UserName
               </label>
-              <textarea
+              <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("description")}
+                {...register("username")}
                 cols={10}
                 rows={7}
                 type="text"
-                placeholder="Enter Your Description"
+                placeholder="Enter Your UserName"
               />
               <p className="text-[red]">{errors.description?.message}</p>
             </div>
 
             <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
-                Amount (In Usd)
+                Crypto Wallet Address
               </label>
               <input
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("amount")}
+                {...register("crypto_wallet_address")}
                 type="text"
-                placeholder="Enter Your Goal Amount"
+                placeholder="Enter Your Crypto Wallet Address"
               />
 
               <p className="text-[red]">{errors.amount?.message}</p>
-            </div>
-            <div className="mb-6">
-              <label
-                className="block text-gray-700 text-sm font-bold mb-2"
-                htmlFor="password"
-              >
-                Expiration Date
-              </label>
-              <input
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                {...register("expirydate")}
-                id="password"
-                type="date"
-                placeholder="Enter Your Description"
-              />
-
-              <p className="text-[red]">{errors.expirydate?.message}</p>
             </div>
             <div className="flex items-center justify-between">
               <button
@@ -133,4 +131,4 @@ function CampaignForm() {
   );
 }
 
-export default CampaignForm;
+export default CampaignOwner;

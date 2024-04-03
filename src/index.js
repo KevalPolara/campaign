@@ -14,12 +14,14 @@ import {
 } from "react-router-dom";
 import CampaignDetails from "./components/CampaignDetails";
 import CampaignForm from "./components/CampaignForm";
+import CapaignOwner from "./components/CampaignOwner";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/createcampaign" element={<CampaignForm />}></Route>
-      <Route path="/campaigndetails" element={<CampaignDetails />}></Route>
+      <Route path="/campaign_owner" element={<CapaignOwner />} />
+      <Route path="/create_campaign" element={<CampaignForm />}></Route>
+      <Route path="/campaign_details" element={<CampaignDetails />}></Route>
     </>
   )
 );

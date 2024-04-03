@@ -8,7 +8,7 @@ const initialState = {
 export const addData = createAsyncThunk("campaign/addData", async (data) => {
   console.log("data", data);
   try {
-    const response = await apiClient().post("/addcampaign", data);
+    const response = await apiClient().post("campaign/addcampaign", data);
     return response.data;
   } catch (error) {
     console.log(error.message);
@@ -17,7 +17,8 @@ export const addData = createAsyncThunk("campaign/addData", async (data) => {
 
 export const getData = createAsyncThunk("campaign/getData", async () => {
   try {
-    const response = await apiClient().get("/getcampaign");
+    const response = await apiClient().get("campaign/getcampaign");
+    console.log("response", response.data);
     return response.data;
   } catch (error) {
     console.log("error", error);
@@ -30,10 +31,9 @@ const campaignSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(addData.fulfilled, (state, action) => {
-      const data = [];
-      data.push(action.payload.addCampaignData);
-      state.campaignData = data;
-      console.log(state.campaignData);
+      if (Array.isArray(action.payload)) {
+        state.campaignData.push(action.payload.addCampaignData);
+      }
     });
 
     builder.addCase(getData.fulfilled, (state, action) => {
