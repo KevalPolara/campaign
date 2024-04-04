@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addData, getData } from "../slice/campaign.slice";
+import { useLocation } from "react-router-dom";
 
 const schema = yup
   .object({
@@ -26,6 +27,9 @@ function CampaignForm() {
   });
 
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  console.log(location.state.id);
 
   useEffect(() => {
     dispatch(getData());
@@ -35,14 +39,12 @@ function CampaignForm() {
   console.log("campaignData", campaignData);
 
   const handleAddData = (data, e) => {
-    dispatch(addData(data));
+    dispatch(addData({ ...data, owner_id: location.state.id }));
   };
 
-  const onSubmit = async (data, e) => {
-    e.preventDefault();
-
+  const onSubmit = async (data) => {
     handleAddData(data);
-    getData();
+     dispatch(getData());
     reset();
   };
 

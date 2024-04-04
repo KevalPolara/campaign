@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addData, getData } from "../slice/campaign.slice";
 import apiClient from "../apiclient/apiclient";
+import { useNavigate } from "react-router-dom";
 
 const schema = yup
   .object({
@@ -27,17 +28,18 @@ function CampaignOwner() {
     resolver: yupResolver(schema),
   });
 
-  const [data, setData] = useState();
-
+  const navigate = useNavigate();
   useEffect(() => {
     getData();
   });
 
+  const [id, setId] = useState(null);
+
   const getData = async () => {
     try {
       const response = await apiClient().get("campaignowner/getcampaignowner");
-      console.log(response.data);
-      setData(data);
+      const getOwnerData = response.data.getCampaignOwnerData;
+      console.log("getOwnerData", getOwnerData);
     } catch (error) {
       console.log(error);
     }
@@ -49,21 +51,45 @@ function CampaignOwner() {
         "campaignowner/addcampaignowner",
         data
       );
-      console.log(response.data);
+      console.log(response.data.addCampaignOwnerData.id);
+      setId(response.data.addCampaignOwnerData.id);
     } catch (error) {
       console.log(error);
     }
   };
 
   const onSubmit = async (data) => {
+    console.log("data", data);
+
     handleAddData(data);
     getData();
     reset();
   };
 
+  const handleClick = () => {
+
+    console.log("id" , id);
+
+    navigate("/create_campaign", {
+      state: {
+        id: id,
+      },
+    });
+  };
+
   return (
     <div className="App">
-      <h1 className="text-black text-[40px] text-center">Campaign Owner</h1>
+      <div className="flex justify-center items-center">
+        <h1 className="text-black text-[40px] text-center pr-[20px]">
+          Campaign Owner
+        </h1>
+        <button
+          onClick={handleClick}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+        >
+          Create Campaign
+        </button>
+      </div>
       <div className="w-full max-w-[30rem] mx-auto">
         <form
           onSubmit={handleSubmit(onSubmit)}

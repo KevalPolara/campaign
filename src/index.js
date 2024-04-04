@@ -16,7 +16,10 @@ import CampaignDetails from "./components/CampaignDetails";
 import CampaignForm from "./components/CampaignForm";
 import CapaignOwner from "./components/CampaignOwner";
 
+  
+
 const router = createBrowserRouter(
+ 
   createRoutesFromElements(
     <>
       <Route path="/campaign_owner" element={<CapaignOwner />} />

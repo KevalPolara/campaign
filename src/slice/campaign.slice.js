@@ -5,15 +5,18 @@ const initialState = {
   campaignData: [],
 };
 
-export const addData = createAsyncThunk("campaign/addData", async (data) => {
-  console.log("data", data);
-  try {
-    const response = await apiClient().post("campaign/addcampaign", data);
-    return response.data;
-  } catch (error) {
-    console.log(error.message);
+export const addData = createAsyncThunk(
+  "campaign/addData",
+  async (data, id) => {
+    console.log("data", data, id);
+    try {
+      const response = await apiClient().post("campaign/addcampaign", data);
+      return response.data;
+    } catch (error) {
+      console.log(error.message);
+    }
   }
-});
+);
 
 export const getData = createAsyncThunk("campaign/getData", async () => {
   try {
