@@ -15,16 +15,17 @@ import {
 import CampaignDetails from "./components/CampaignDetails";
 import CampaignForm from "./components/CampaignForm";
 import CapaignOwner from "./components/CampaignOwner";
+import CampaignDonator from "./components/CampaignDonator";
 
   
 
 const router = createBrowserRouter(
- 
   createRoutesFromElements(
     <>
       <Route path="/campaign_owner" element={<CapaignOwner />} />
       <Route path="/create_campaign" element={<CampaignForm />}></Route>
       <Route path="/campaign_details" element={<CampaignDetails />}></Route>
+      <Route path="/campaign_donator" element={<CampaignDonator />}></Route>
     </>
   )
 );
